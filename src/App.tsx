@@ -118,7 +118,11 @@ export default function App() {
     setAuthToken(res.token);
     setUser(res.user);
     setIsAuthenticated(true);
-    await loadData();
+    await loadData().catch(() => {});
+    } catch (e) {
+      console.error('Error during handleLogin:', e);
+      throw e;
+    }
   };
 
   const handleRegisterSuccess = async (token: string, newUser: User) => {
@@ -139,14 +143,22 @@ export default function App() {
     setAuthToken(res.token);
     setUser(res.user);
     setIsAuthenticated(true);
-    await loadData();
+    await loadData().catch(() => {});
+    } catch (e) {
+      console.error('Error during handleVerifyOtp:', e);
+      throw e;
+    }
   };
 
   const handleSwitchRole = async (role: Role) => {
-    const res = await api.switchRole(role);
-    setAuthToken(res.token);
-    setUser(res.user);
-    await loadData();
+    try {
+      const res = await api.switchRole(role);
+      setAuthToken(res.token);
+      setUser(res.user);
+      await loadData().catch(() => {});
+    } catch (e) {
+      console.error('Error during handleSwitchRole:', e);
+    }
   };
 
   if (!isAuthenticated) {
