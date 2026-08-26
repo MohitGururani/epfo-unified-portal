@@ -273,7 +273,7 @@ export const RetirementWealthChart: React.FC = () => {
       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-          <span>8.25% Annual Statutory Compound Interest • Monthly Wage Deduction: 12% EE + 3.67% ER</span>
+          <span>Compounded growth projection based on standard 8.25% statutory yield and continuous contributions.</span>
         </div>
         <div className="flex items-center gap-1 text-[11px] text-slate-400">
           <span>Click any age on the chart to inspect milestone corpus</span>
