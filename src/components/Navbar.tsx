@@ -33,7 +33,6 @@ interface NavbarProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
   onOpenAuthModal?: () => void;
-  onOpenArchitectureModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -46,7 +45,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNotifications,
   darkMode,
   onToggleDarkMode,
-  onOpenAuthModal,
   onOpenArchitectureModal,
 }) => {
   const [showRoleMenu, setShowRoleMenu] = useState(false);
@@ -88,18 +86,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Architecture Live Hub button */}
-          {onOpenArchitectureModal && (
-            <button
-              type="button"
-              onClick={onOpenArchitectureModal}
-              className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-medium hover:bg-emerald-500/30 transition cursor-pointer"
-              title="Inspect Live System Architecture"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>Architecture Hub</span>
-            </button>
-          )}
 
           {/* Day / Night Mode Segmented Switch */}
           <div className="flex items-center bg-slate-950/90 p-0.5 rounded-lg border border-slate-800 text-[11px]">
