@@ -250,7 +250,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-medium transition cursor-pointer"
                 title="Switch user account or register new profile"
               >
-                <span>Switch / Sign In</span>
+                <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span className="hidden sm:inline">Switch / Sign In</span>
+                <span className="sm:hidden inline">Switch</span>
               </button>
             </div>
           </div>
