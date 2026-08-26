@@ -178,7 +178,6 @@ export default function App() {
         darkMode={darkMode}
         onToggleDarkMode={toggleDarkMode}
         onOpenAuthModal={() => setShowAuthModal(true)}
-        onOpenArchitectureModal={() => setShowArchModal(true)}
       />
 
       {/* Main Content Area */}
