@@ -1,0 +1,6 @@
+{
+  "name": "EPFO 2.0 Portal",
+  "description": "Unified EPFO 2.0 system with API Gateway, modular backend services, PostgreSQL database schema, Redis caching, RabbitMQ async claim processing, and contribution reconciliation engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
