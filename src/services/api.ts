@@ -15,6 +15,9 @@ import {
   ClaimType
 } from '../types';
 
+// Dynamic API Base URL (uses VITE_API_URL if configured, otherwise defaults to /api)
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
 let authToken: string | null = localStorage.getItem('epfo_token');
 
 export const setAuthToken = (token: string | null) => {
@@ -38,7 +41,9 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers['Authorization'] = `Bearer ${authToken}`;
   }
 
-  const response = await fetch(`/api${endpoint}`, {
+  const url = API_BASE ? `${API_BASE}/api${endpoint}` : `/api${endpoint}`;
+
+  const response = await fetch(url, {
     ...options,
     headers,
   });
