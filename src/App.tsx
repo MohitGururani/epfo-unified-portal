@@ -205,6 +205,7 @@ export default function App() {
             mismatchCount={mismatchCount}
             onNavigate={setActiveTab}
             onRefreshBalance={loadData}
+            onOpenAuthModal={() => setShowAuthModal(true)}
           />
         )}
 
@@ -271,6 +272,7 @@ export default function App() {
           <ProfileView
             user={user}
             employment={employment}
+            onOpenAuthModal={() => setShowAuthModal(true)}
           />
         )}
       </main>
