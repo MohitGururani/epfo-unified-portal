@@ -114,11 +114,12 @@ export default function App() {
   }, []);
 
   const handleLogin = async (uan: string, role?: Role) => {
-    const res = await api.login(uan, role);
-    setAuthToken(res.token);
-    setUser(res.user);
-    setIsAuthenticated(true);
-    await loadData().catch(() => {});
+    try {
+      const res = await api.login(uan, role);
+      setAuthToken(res.token);
+      setUser(res.user);
+      setIsAuthenticated(true);
+      await loadData().catch(() => {});
     } catch (e) {
       console.error('Error during handleLogin:', e);
       throw e;
