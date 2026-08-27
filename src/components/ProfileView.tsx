@@ -7,7 +7,10 @@ import {
   Calendar,
   Phone,
   Mail,
-  MapPin
+  MapPin,
+  UserCheck,
+  UserPlus,
+  ArrowRightLeft
 } from 'lucide-react';
 import { User as UserType, EmploymentRecord } from '../types';
 
@@ -16,7 +19,7 @@ interface ProfileViewProps {
   employment: EmploymentRecord[];
 }
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ user, employment }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({ user, employment, onOpenAuthModal }) => {
   return (
     <div className="space-y-6">
       {/* Profile Header Card */}
@@ -47,6 +50,17 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ user, employment }) =>
             </div>
           </div>
         </div>
+        {onOpenAuthModal && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onOpenAuthModal}
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-2 cursor-pointer"
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>Switch User / Create Profile</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Member Details & Demographics */}
