@@ -140,11 +140,12 @@ export default function App() {
   };
 
   const handleVerifyOtp = async (uan: string, otp: string) => {
-    const res = await api.verifyOtp(uan, otp);
-    setAuthToken(res.token);
-    setUser(res.user);
-    setIsAuthenticated(true);
-    await loadData().catch(() => {});
+    try {
+      const res = await api.verifyOtp(uan, otp);
+      setAuthToken(res.token);
+      setUser(res.user);
+      setIsAuthenticated(true);
+      await loadData().catch(() => {});
     } catch (e) {
       console.error('Error during handleVerifyOtp:', e);
       throw e;
