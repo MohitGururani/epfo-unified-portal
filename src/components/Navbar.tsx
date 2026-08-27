@@ -121,40 +121,67 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Role Switcher */}
-          <div className="relative">
+          {/* Role Switcher & Account Access */}
+          <div className="flex items-center gap-2">
             <button
+              type="button"
+              onClick={() => onOpenAuthModal && onOpenAuthModal()}
+              className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition py-0.5 px-2 rounded bg-emerald-950/60 border border-emerald-500/40 cursor-pointer text-[11px] font-semibold"
+              title="Sign in with custom credentials or create profile"
+            >
+              <UserCheck className="w-3.5 h-3.5" />
+              <span>Switch / Sign In</span>
+            </button>
+
+            <div className="relative">
+              <button
+                type="button"
               onClick={() => setShowRoleMenu(!showRoleMenu)}
               className="flex items-center gap-1 sm:gap-1.5 text-slate-300 hover:text-white transition py-0.5 px-1.5 sm:px-2 rounded hover:bg-slate-800 cursor-pointer text-[11px] sm:text-xs"
             >
-              <UserCheck className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Role: </span>
-              <strong className="text-white font-semibold">{user?.role}</strong>
+              <strong className="text-white font-semibold">{user?.role || 'MEMBER'}</strong>
               <ChevronDown className="w-3 h-3" />
             </button>
 
             {showRoleMenu && (
-              <div className="absolute right-0 mt-1 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-1 z-50 text-slate-200 text-xs overflow-hidden">
-                <div className="px-3 py-1.5 border-b border-slate-700 text-slate-400 font-medium">
-                  Switch Active Role (Demo Mode)
+              <div className="absolute right-0 mt-1 w-64 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl py-1 z-50 text-slate-200 text-xs overflow-hidden">
+                  <div className="px-3 py-1.5 border-b border-slate-800 text-slate-400 font-medium flex items-center justify-between">
+                    <span>Active Demo Persona</span>
+                    <span className="text-[10px] font-mono text-emerald-400">1-Click</span>
                 </div>
                 {(['EMPLOYEE', 'EMPLOYER', 'OFFICER', 'ADMIN'] as Role[]).map((r) => (
                   <button
                     key={r}
+                    type="button"
                     onClick={() => {
                       onSwitchRole(r);
                       setShowRoleMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-700 transition cursor-pointer ${
-                      user?.role === r ? 'text-emerald-400 font-semibold bg-slate-700/50' : ''
+                    className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-800 transition cursor-pointer ${
+                        user?.role === r ? 'text-emerald-400 font-semibold bg-slate-800/80' : ''
                     }`}
                   >
                     <span>{roleLabels[r].title}</span>
                     {user?.role === r && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
                   </button>
                 ))}
+                <div className="p-1.5 border-t border-slate-800 bg-slate-950">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowRoleMenu(false);
+                        if (onOpenAuthModal) onOpenAuthModal();
+                      }}
+                      className="w-full py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <UserCheck className="w-3.5 h-3.5" />
+                      <span>Open Sign In / Register Dialog</span>
+                    </button>
+                  </div>
               </div>
             )}
+             </div>
           </div>
         </div>
       </div>
@@ -246,11 +273,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               <button
+                type="button"
                 onClick={() => onOpenAuthModal && onOpenAuthModal()}
-                className="hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-medium transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer shadow-sm active:scale-95"
                 title="Switch user account or register new profile"
               >
-                <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <UserCheck className="w-3.5 h-3.5 text-white" />
                 <span className="hidden sm:inline">Switch / Sign In</span>
                 <span className="sm:hidden inline">Switch</span>
               </button>
