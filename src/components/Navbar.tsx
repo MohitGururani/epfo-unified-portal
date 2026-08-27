@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNotifications,
   darkMode,
   onToggleDarkMode,
-  onOpenArchitectureModal,
+  oonOpenAuthModal,
 }) => {
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showNotifMenu, setShowNotifMenu] = useState(false);
