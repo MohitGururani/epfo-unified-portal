@@ -159,6 +159,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Role Switcher & Account Access */}
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              id="topbar-switch-signin-btn"
+              onClick={handleOpenAuth}
+              className="flex items-center gap-1 text-emerald-300 hover:text-white bg-emerald-950/70 hover:bg-emerald-900/90 border border-emerald-500/40 hover:border-emerald-400/80 transition py-0.5 px-2 rounded-lg cursor-pointer text-[11px] sm:text-xs font-semibold shadow-xs active:scale-95 shrink-0"
+              title="Switch user account or sign in"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Switch User</span>
+            </button>
+
             <div className="relative">
               <button
                 type="button"
@@ -311,19 +322,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">UAN: {user?.uan?.slice(-4) ? `•••• ${user.uan.slice(-4)}` : 'Demo'}</div>
                 </div>
                 <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${showProfileMenu ? 'rotate-180' : ''}`} />
-              </button>
-
-              {/* Direct Switch / Sign In Button In Header */}
-              <button
-                type="button"
-                id="header-switch-signin-btn"
-                onClick={handleOpenAuth}
-                className="relative z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-sm active:scale-95 shrink-0"
-                title="Switch user account or register new profile"
-              >
-                <UserCheck className="w-3.5 h-3.5 text-white" />
-                <span className="hidden sm:inline">Switch / Sign In</span>
-                <span className="sm:hidden inline">Switch</span>
               </button>
 
               {/* User Profile Dropdown Menu */}
