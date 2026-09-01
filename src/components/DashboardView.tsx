@@ -72,16 +72,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Quick Balance Hero Action */}
           <div className="flex flex-wrap items-center gap-3">
-            {onOpenAuthModal && (
-              <button
-                onClick={onOpenAuthModal}
-                className="px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-emerald-300 font-semibold text-sm border border-emerald-500/30 transition shadow-sm flex items-center gap-2 cursor-pointer"
-                title="Switch Member Profile or Register New Account"
-              >
-                <Users className="w-4 h-4 text-emerald-400" />
-                <span>Switch / Sign In</span>
-              </button>
-            )}
             <button
               onClick={() => onNavigate('claims')}
               className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition shadow-md flex items-center gap-2 cursor-pointer"
