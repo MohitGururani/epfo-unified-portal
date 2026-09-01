@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ShieldCheck,
   Bell,
@@ -17,7 +17,11 @@ import {
   ArrowRightLeft,
   Users,
   MessageSquareWarning,
-  Menu
+  Menu,
+  User as UserIcon,
+  LogOut,
+  UserPlus,
+  Settings
 } from 'lucide-react';
 import { User, Role, AppNotification } from '../types';
 import { AppLogo } from './AppLogo';
@@ -45,11 +49,44 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNotifications,
   darkMode,
   onToggleDarkMode,
-  oonOpenAuthModal,
+  onOpenAuthModal,
 }) => {
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showNotifMenu, setShowNotifMenu] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileNavDropdown, setShowMobileNavDropdown] = useState(false);
+
+  const headerRef = useRef<HTMLElement>(null);
+
+  const handleOpenAuth = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setShowProfileMenu(false);
+    setShowRoleMenu(false);
+    setShowNotifMenu(false);
+    setShowMobileNavDropdown(false);
+    if (onOpenAuthModal) {
+      onOpenAuthModal();
+    }
+  };
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setShowRoleMenu(false);
+        setShowNotifMenu(false);
+        setShowProfileMenu(false);
+        setShowMobileNavDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleDocumentClick);
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+    };
+  }, []);
 
   const roleLabels: Record<Role, { title: string; color: string; badge: string }> = {
     EMPLOYEE: { title: 'Member (Employee)', color: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-300', badge: 'UAN Member' },
@@ -73,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const CurrentIcon = currentNav.icon;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header ref={headerRef} className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
       {/* Top Bar for Gov ID, Night Mode & Role Switcher */}
       <div className="bg-slate-900 dark:bg-slate-950 text-slate-200 text-xs px-3 sm:px-8 py-1.5 flex flex-wrap justify-between items-center gap-2 border-b border-slate-800">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -86,7 +123,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-
           {/* Day / Night Mode Segmented Switch */}
           <div className="flex items-center bg-slate-950/90 p-0.5 rounded-lg border border-slate-800 text-[11px]">
             <button
@@ -121,43 +157,59 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Role Switcher */}
-          <div className="relative">
+          {/* Role Switcher & Account Access */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
               <button
                 type="button"
-              onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className="flex items-center gap-1 sm:gap-1.5 text-slate-300 hover:text-white transition py-0.5 px-1.5 sm:px-2 rounded hover:bg-slate-800 cursor-pointer text-[11px] sm:text-xs"
-            >
-              <UserCheck className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">Role: </span>
-              <strong className="text-white font-semibold">{user?.role || 'MEMBER'}</strong>
-              <ChevronDown className="w-3 h-3" />
-            </button>
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowRoleMenu(!showRoleMenu);
+                  setShowNotifMenu(false);
+                  setShowProfileMenu(false);
+                }}
+                className="flex items-center gap-1 sm:gap-1.5 text-slate-300 hover:text-white transition py-0.5 px-1.5 sm:px-2 rounded hover:bg-slate-800 cursor-pointer text-[11px] sm:text-xs"
+              >
+                <span className="hidden sm:inline">Role: </span>
+                <strong className="text-white font-semibold">{user?.role || 'MEMBER'}</strong>
+                <ChevronDown className="w-3 h-3" />
+              </button>
 
-            {showRoleMenu && (
-              <div className="absolute right-0 mt-1 w-56 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl py-1 z-50 text-slate-200 text-xs overflow-hidden">
+              {showRoleMenu && (
+                <div className="absolute right-0 mt-1 w-64 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl py-1 z-50 text-slate-200 text-xs overflow-hidden">
                   <div className="px-3 py-1.5 border-b border-slate-800 text-slate-400 font-medium flex items-center justify-between">
-                    <span>Switch Active Role</span>
+                    <span>Active Demo Persona</span>
                     <span className="text-[10px] font-mono text-emerald-400">1-Click</span>
-                </div>
-                {(['EMPLOYEE', 'EMPLOYER', 'OFFICER', 'ADMIN'] as Role[]).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => {
-                      onSwitchRole(r);
-                      setShowRoleMenu(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-800 transition cursor-pointer ${
+                  </div>
+                  {(['EMPLOYEE', 'EMPLOYER', 'OFFICER', 'ADMIN'] as Role[]).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => {
+                        onSwitchRole(r);
+                        setShowRoleMenu(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-800 transition cursor-pointer ${
                         user?.role === r ? 'text-emerald-400 font-semibold bg-slate-800/80' : ''
-                    }`}
-                  >
-                    <span>{roleLabels[r].title}</span>
-                    {user?.role === r && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
-                  </button>
-                ))}
-              </div>
-            )}
+                      }`}
+                    >
+                      <span>{roleLabels[r].title}</span>
+                      {user?.role === r && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                    </button>
+                  ))}
+                  <div className="p-1.5 border-t border-slate-800 bg-slate-950">
+                    <button
+                      type="button"
+                      onClick={handleOpenAuth}
+                      className="w-full py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <UserCheck className="w-3.5 h-3.5" />
+                      <span>Open Sign In / Register Dialog</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -184,8 +236,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Notification Bell */}
             <div className="relative">
               <button
-                onClick={() => {
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
                   setShowNotifMenu(!showNotifMenu);
+                  setShowRoleMenu(false);
+                  setShowProfileMenu(false);
                   if (!showNotifMenu) onOpenNotifications();
                 }}
                 className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 relative transition cursor-pointer"
@@ -204,6 +260,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                     <h4 className="font-semibold text-slate-800 dark:text-white text-sm">Notifications ({unreadCount} new)</h4>
                     <button
+                      type="button"
                       onClick={() => {
                         setActiveTab('notifications');
                         setShowNotifMenu(false);
@@ -232,12 +289,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Profile & Account Button */}
-            <div className="flex items-center gap-2">
+            {/* Profile & Account Area */}
+            <div className="flex items-center gap-2 relative">
+              {/* User Profile Pill / Dropdown Button */}
               <button
-                onClick={() => onOpenAuthModal ? onOpenAuthModal() : setActiveTab('profile')}
-                className="flex items-center gap-2 pl-2 sm:pl-2.5 pr-2.5 sm:pr-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer text-left"
-                title="Manage Profile, Login or Register New User"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowProfileMenu(!showProfileMenu);
+                  setShowNotifMenu(false);
+                  setShowRoleMenu(false);
+                }}
+                className="flex items-center gap-2 pl-2 sm:pl-2.5 pr-2.5 sm:pr-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer text-left shadow-xs"
+                title="Open Profile Menu & Account Details"
               >
                 <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                   {user?.name?.charAt(0) || 'U'}
@@ -246,18 +310,135 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight max-w-[130px] truncate">{user?.name}</div>
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">UAN: {user?.uan?.slice(-4) ? `•••• ${user.uan.slice(-4)}` : 'Demo'}</div>
                 </div>
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${showProfileMenu ? 'rotate-180' : ''}`} />
               </button>
 
+              {/* Direct Switch / Sign In Button In Header */}
               <button
                 type="button"
-                onClick={() => onOpenAuthModal && onOpenAuthModal()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer shadow-sm active:scale-95"
+                id="header-switch-signin-btn"
+                onClick={handleOpenAuth}
+                className="relative z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-sm active:scale-95 shrink-0"
                 title="Switch user account or register new profile"
               >
                 <UserCheck className="w-3.5 h-3.5 text-white" />
                 <span className="hidden sm:inline">Switch / Sign In</span>
                 <span className="sm:hidden inline">Switch</span>
               </button>
+
+              {/* User Profile Dropdown Menu */}
+              {showProfileMenu && (
+                <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 z-50 text-slate-900 dark:text-slate-100 text-xs">
+                  {/* User Overview */}
+                  <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                      {user?.name?.charAt(0) || 'U'}
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="font-bold text-sm text-slate-900 dark:text-white truncate">{user?.name}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">UAN: {user?.uan}</div>
+                      <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300">
+                        {user?.role}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="py-2 space-y-1">
+                    <button
+                      type="button"
+                      onClick={handleOpenAuth}
+                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition cursor-pointer text-left"
+                    >
+                      <UserCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <div>
+                        <div>Switch / Sign In Profile</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">Login with another UAN or credentials</div>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('profile');
+                        setShowProfileMenu(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer text-left"
+                    >
+                      <UserIcon className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <div className="font-medium">View Full Profile</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400">KYC & employment details</div>
+                      </div>
+                    </button>
+                  </div>
+
+                  {/* Quick Persona Switcher in Menu */}
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                      Fast 1-Click Persona Switch
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSwitchRole('EMPLOYEE');
+                          setShowProfileMenu(false);
+                        }}
+                        className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition cursor-pointer ${
+                          user?.role === 'EMPLOYEE'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold'
+                            : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-emerald-400'
+                        }`}
+                      >
+                        👤 Member
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSwitchRole('EMPLOYER');
+                          setShowProfileMenu(false);
+                        }}
+                        className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition cursor-pointer ${
+                          user?.role === 'EMPLOYER'
+                            ? 'bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 font-bold'
+                            : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400'
+                        }`}
+                      >
+                        🏢 Employer
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSwitchRole('OFFICER');
+                          setShowProfileMenu(false);
+                        }}
+                        className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition cursor-pointer ${
+                          user?.role === 'OFFICER'
+                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold'
+                            : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-amber-400'
+                        }`}
+                      >
+                        📋 Officer
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSwitchRole('ADMIN');
+                          setShowProfileMenu(false);
+                        }}
+                        className={`px-2 py-1.5 rounded-lg border text-left text-[11px] font-medium transition cursor-pointer ${
+                          user?.role === 'ADMIN'
+                            ? 'bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400 font-bold'
+                            : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-purple-400'
+                        }`}
+                      >
+                        ⚙️ Admin
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -346,3 +527,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
